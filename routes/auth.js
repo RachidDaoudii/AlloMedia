@@ -16,5 +16,5 @@ router.post("/forgetpassword", (req, res) => {
 router.post("/resetpassword/:token", (req, res) => {
   return res.send("testing route resetpassword with token");
 });
-// fgfg
+
 module.exports = router;
