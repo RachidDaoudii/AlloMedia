@@ -17,8 +17,4 @@ router.post("/resetpassword/:token", (req, res) => {
   return res.send("testing route resetpassword with token");
 });
 
-router.post("/test", (req, res) => {
-  return res.send("testing route resetpassword with token");
-});
-
 module.exports = router;
