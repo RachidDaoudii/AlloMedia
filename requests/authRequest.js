@@ -73,6 +73,7 @@ class authRequest {
       req.body
     );
     return resultValidation;
+    
   };
 
   static validateResetpassword = (req, res, next) => {
