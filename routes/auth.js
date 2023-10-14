@@ -1,20 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const authController = require("../controllers/authController");
+const resRegister = require("../middlewares/resRegister");
 
-router.post("/login", (req, res) => {
-  return res.send("testing route login");
-});
+router.post("/login", authController.login);
 
-router.post("/register", (req, res) => {
-  return res.send("testing route register");
-});
+router.post("/register", resRegister, authController.register);
 
-router.post("/forgetpassword", (req, res) => {
-  return res.send("testing route forgetpassword");
-});
+router.post("/forgetpassword", authController.forgetpassword);
 
-router.post("/resetpassword/:token", (req, res) => {
-  return res.send("testing route resetpassword with token");
-});
+router.post("/resetpassword/:token", authController.resetpassword);
+
+router.post("/logout", authController.logout);
 
 module.exports = router;
