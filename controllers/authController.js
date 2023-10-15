@@ -1,8 +1,8 @@
-require("dotenv").config();
+const bycrpt = require("bcryptjs");
 const authRequest = require("../requests/authRequest");
 const usermodel = require("../models/userModel");
-const bycrpt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jwtToken = require("../helpers/jwtToken");
+const mailer = require("../helpers/mailer");
 
 class auth {
   static login = async (req, res) => {
@@ -22,8 +22,19 @@ class auth {
         return res
           .status(400)
           .json({ status: "error", message: "email or password is wrong" });
-      const token = jwt.sign({ _id: user._id }, process.env.PRIVATEKEY);
-      const { username, email, role, created_at } = user;
+
+      const token = await jwtToken.generateToken(user);
+      res.cookie("_gcl_au", token, { httpOnly: true });
+
+      const { username, email, role, created_at, verified } = user;
+
+      if (!verified) {
+        await mailer.sendEmail(username, email, token);
+        return res.status(400).json({
+          status: "success",
+          message: "please verify your email",
+        });
+      }
 
       return res.status(201).json({
         status: "success",
@@ -46,13 +57,6 @@ class auth {
 
   static register = async (req, res) => {
     try {
-      // const result = authRequest.validateRegister(req);
-
-      // if (result.error)
-      //   return res
-      //     .status(400)
-      //     .json({ status: "error", message: result.error.message });
-
       const self = await bycrpt.genSalt(10);
       req.body.password = await bycrpt.hash(req.body.password, self);
 
@@ -88,6 +92,29 @@ class auth {
 
   static logout = async (req, res) => {
     return res.send("testing route logout");
+  };
+
+  static activationEmail = async (req, res) => {
+    req.body.email = req.params.email;
+    try {
+      const user = await usermodel.findUser(req);
+      if (!user)
+        return res.status(400).json({
+          status: "error",
+          message: "user not found",
+        });
+
+      await usermodel.updateUser(req);
+      return res.status(201).json({
+        status: "success",
+        message: "Verification successful",
+      });
+    } catch (error) {
+      return res.status(404).json({
+        status: "error",
+        message: error.message,
+      });
+    }
   };
 }
 

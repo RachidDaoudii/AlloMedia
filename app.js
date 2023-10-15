@@ -1,8 +1,11 @@
 const express = require("express");
+require("dotenv").config();
+const cookieParser = require("cookie-parser");
 const DB = require("./config/connection");
 const routerAuth = require("./routes/auth");
 const app = express();
-const port = 3000;
+const port = process.env.port || 5000;
+app.use(cookieParser());
 app.use(express.json());
 DB.connectDB();
 app.use("/api/auth", routerAuth);
