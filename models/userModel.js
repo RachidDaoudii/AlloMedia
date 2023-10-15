@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const roleModel = require("./roleModel");
 const { boolean } = require("joi");
-// const role = mongoose.model("Role", roleModel.roleSchema);
 class userModel {
   static userSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -14,7 +13,6 @@ class userModel {
     role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
-      default: "65290ffdc5731b590f352acf",
     },
     created_at: { type: Date, default: Date.now },
     verified: { type: Boolean, default: false },
@@ -28,6 +26,7 @@ class userModel {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
+        role: req.body.role,
       });
 
       await user.save();
@@ -60,7 +59,6 @@ class userModel {
           },
         }
       );
-      console.log(user);
       return user;
     } catch (error) {
       return error;

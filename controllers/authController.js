@@ -1,6 +1,7 @@
 const bycrpt = require("bcryptjs");
 const authRequest = require("../requests/authRequest");
 const usermodel = require("../models/userModel");
+const rolemodel = require("../models/roleModel");
 const jwtToken = require("../helpers/jwtToken");
 const mailer = require("../helpers/mailer");
 
@@ -60,6 +61,8 @@ class auth {
       const self = await bycrpt.genSalt(10);
       req.body.password = await bycrpt.hash(req.body.password, self);
 
+      const role = await rolemodel.getRole(req);
+      req.body.role = role._id;
       const user = await usermodel.createUser(req);
 
       if (user.keyValue)
@@ -86,7 +89,6 @@ class auth {
   };
 
   static resetpassword = async (req, res) => {
-    // console.log(req.params.token);
     return res.send("testing route resetpassword with token");
   };
 

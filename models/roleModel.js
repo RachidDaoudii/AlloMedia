@@ -20,6 +20,20 @@ class roleModel {
       console.error(err);
     }
   };
+
+  static getRole = async (req, res) => {
+    try {
+      const role = await roleModel.Role.findOne({
+        name: req.body.role,
+      });
+      return role;
+    } catch (error) {
+      return res.status(400).json({
+        status: "error",
+        message: "role not found",
+      });
+    }
+  };
 }
 
 module.exports = roleModel;
