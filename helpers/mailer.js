@@ -16,8 +16,8 @@ class Mailer {
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: "68503c8b2329f3",
-          pass: "5b5f7273e11c6c",
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
         },
       });
 
