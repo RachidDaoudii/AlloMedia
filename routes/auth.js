@@ -3,16 +3,17 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 const resRegister = require("../middlewares/resRegister");
 const jwtToken = require("../helpers/jwtToken");
+const auth = require("../middlewares/auth");
 
 router.post("/login", authController.login);
 
 router.post("/register", resRegister, authController.register);
 
-router.post("/forgetpassword", authController.forgetpassword);
+router.post("/forgetpassword", auth.isAuth, authController.forgetpassword);
 
-router.post("/resetpassword/:token", authController.resetpassword);
+router.post("/resetpassword/:token", auth.isAuth, authController.resetpassword);
 
-router.post("/logout", authController.logout);
+router.get("/logout", auth.isAuth, authController.logout);
 
 router.get(
   "/activationEmail/:email/:token",

@@ -27,7 +27,7 @@ class auth {
       const token = await jwtToken.generateToken(user);
       res.cookie("_gcl_au", token, { httpOnly: true });
 
-      const { username, email, role, created_at, verified } = user;
+      const { _id, username, email, role, created_at, verified } = user;
 
       if (!verified) {
         await mailer.sendEmail(username, email, token);
@@ -37,6 +37,7 @@ class auth {
         });
       }
 
+      res.cookie("_cks_ui", _id, { httpOnly: true });
       return res.status(201).json({
         status: "success",
         message: `Hi ${role.name} ${username}`,
@@ -93,7 +94,12 @@ class auth {
   };
 
   static logout = async (req, res) => {
-    return res.send("testing route logout");
+    res.clearCookie("_gcl_au");
+    res.clearCookie("_cks_ui");
+    return res.status(200).json({
+      status: "success",
+      message: "logout successfully",
+    });
   };
 
   static activationEmail = async (req, res) => {
