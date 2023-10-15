@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const roleModel = require("./roleModel");
-const role = mongoose.model("Role", roleModel.roleSchema);
+const { boolean } = require("joi");
+// const role = mongoose.model("Role", roleModel.roleSchema);
 class userModel {
   static userSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -16,6 +17,7 @@ class userModel {
       default: "65290ffdc5731b590f352acf",
     },
     created_at: { type: Date, default: Date.now },
+    verified: { type: Boolean, default: false },
   });
 
   static User = mongoose.model("User", userModel.userSchema);
@@ -40,6 +42,25 @@ class userModel {
       const user = await userModel.User.findOne({
         email: req.body.email,
       }).populate("role");
+      return user;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  static updateUser = async (req, res) => {
+    try {
+      const user = await userModel.User.updateOne(
+        {
+          email: req.body.email,
+        },
+        {
+          $set: {
+            verified: true,
+          },
+        }
+      );
+      console.log(user);
       return user;
     } catch (error) {
       return error;
