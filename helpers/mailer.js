@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-
+require("dotenv").config();
 class Mailer {
   static template = (name, email, tekon) => {
     return `
@@ -20,7 +20,6 @@ class Mailer {
           pass: process.env.EMAIL_PASSWORD,
         },
       });
-
       const mailOptions = {
         from: "rachiddaoudi533@gmail.com",
         to: to,

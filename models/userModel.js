@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const roleModel = require("./roleModel");
-const { boolean } = require("joi");
+
 class userModel {
   static userSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -36,7 +36,7 @@ class userModel {
     }
   };
 
-  static findUser = async (req, res) => {
+  static findUserbyEmail = async (req, res) => {
     try {
       const user = await userModel.User.findOne({
         email: req.body.email,
@@ -56,6 +56,24 @@ class userModel {
         {
           $set: {
             verified: true,
+          },
+        }
+      );
+      return user;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  static upadatePAssword = async (req) => {
+    try {
+      const user = await userModel.User.updateOne(
+        {
+          _id: req.body._id,
+        },
+        {
+          $set: {
+            password: req.body.new_password,
           },
         }
       );
