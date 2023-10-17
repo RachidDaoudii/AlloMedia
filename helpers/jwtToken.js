@@ -2,17 +2,29 @@ const jwt = require("jsonwebtoken");
 
 class jwtToken {
   static generateToken = async (user) => {
-    const token = await jwt.sign({ _id: user._id }, process.env.PRIVATEKEY, {
+    const token = await jwt.sign({user}, process.env.PRIVATEKEY, {
       expiresIn: "10m",
     });
-
+    
     return token;
   };
 
   static verifyToken = async (req, res, next) => {
     try {
-      const token = req.params.token || req.body.token;
-      const decoded = await jwt.verify(token, process.env.PRIVATEKEY);
+      const token = req.params.token || req.cookies._cks_ui;
+      if (!token)
+        return res.status(401).json({
+          status: "error",
+          message: "Unauthorized",
+        });
+
+      const decoded = await this.decoded(token);
+
+      if (!decoded)
+        return res.status(401).json({
+          status: "error",
+          message: "Unauthorized",
+        });
       req.userData = decoded;
       next();
     } catch (error) {
@@ -22,6 +34,12 @@ class jwtToken {
       });
     }
   };
+
+  static decoded = async (user) => {
+    const decoded = await jwt.verify(user, process.env.PRIVATEKEY);
+    return decoded;
+  };
+  static RefreshToken = (req, res) => {};
 }
 
 module.exports = jwtToken;

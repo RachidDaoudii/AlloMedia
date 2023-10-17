@@ -8,7 +8,7 @@ const port = process.env.port || 5000;
 app.use(cookieParser());
 app.use(express.json());
 DB.connectDB();
-app.use("/api/auth", routerAuth);
+app.use("/api", routerAuth);
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });

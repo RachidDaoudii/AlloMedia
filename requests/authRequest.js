@@ -51,9 +51,17 @@ class authRequest {
   });
 
   static resetpasswordSchema = Joi.object({
-    password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    new_password: Joi.string()
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .required()
+      .error(new Error("Invalid password format.")),
 
-    repeat_password: Joi.ref("password"),
+    repeat_password: Joi.ref("new_password"),
+
+    old_password: Joi.string()
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .required()
+      .error(new Error("old password is empty.")),
   });
 
   static validateRegister = (req, res, next) => {
@@ -73,7 +81,6 @@ class authRequest {
       req.body
     );
     return resultValidation;
-    
   };
 
   static validateResetpassword = (req, res, next) => {
