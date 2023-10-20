@@ -12,8 +12,7 @@ class authRequest {
         minDomainSegments: 2,
         tlds: { allow: ["com", "net"] },
       })
-      .required()
-      .error(new Error("Invalid email format")),
+      .required(),
 
     password: Joi.string()
       .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
@@ -30,8 +29,7 @@ class authRequest {
         minDomainSegments: 2,
         tlds: { allow: ["com", "net"] },
       })
-      .required()
-      .error(new Error("Invalid email format")),
+      .required(),
 
     password: Joi.string()
       .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
@@ -44,10 +42,12 @@ class authRequest {
   });
 
   static forgetpasswordSchema = Joi.object({
-    email: Joi.string().email({
-      minDomainSegments: 2,
-      tlds: { allow: ["com", "net"] },
-    }),
+    email: Joi.string()
+      .email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+      })
+      .required(),
   });
 
   static resetpasswordSchema = Joi.object({
@@ -65,26 +65,24 @@ class authRequest {
   });
 
   static validateRegister = (req, res, next) => {
-    const resultValidation = authRequest.registerSchema.validate(req.body, {
+    const resultValidation = this.registerSchema.validate(req.body, {
       abortEarly: false,
     });
     return resultValidation;
   };
 
   static validateLogin = (req, res, next) => {
-    const resultValidation = authRequest.loginSchema.validate(req.body);
+    const resultValidation = this.loginSchema.validate(req.body);
     return resultValidation;
   };
 
   static validateForgetpassword = (req, res, next) => {
-    const resultValidation = authRequest.forgetpasswordSchema.validate(
-      req.body
-    );
+    const resultValidation = this.forgetpasswordSchema.validate(req.body);
     return resultValidation;
   };
 
   static validateResetpassword = (req, res, next) => {
-    const resultValidation = authRequest.resetpasswordSchema.validate(req.body);
+    const resultValidation = this.resetpasswordSchema.validate(req.body);
     return resultValidation;
   };
 }

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const roleModel = require("./roleModel");
 
 class userModel {
   static userSchema = new mongoose.Schema({
@@ -18,11 +17,11 @@ class userModel {
     verified: { type: Boolean, default: false },
   });
 
-  static User = mongoose.model("User", userModel.userSchema);
+  static User = mongoose.model("User", this.userSchema);
 
   static createUser = async (req, res) => {
     try {
-      const user = new userModel.User({
+      const user = new this.User({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
@@ -38,9 +37,10 @@ class userModel {
 
   static findUserbyEmail = async (req, res) => {
     try {
-      const user = await userModel.User.findOne({
+      const user = await this.User.findOne({
         email: req.body.email,
       }).populate("role");
+
       return user;
     } catch (error) {
       return error;
@@ -49,7 +49,7 @@ class userModel {
 
   static updateUser = async (req, res) => {
     try {
-      const user = await userModel.User.updateOne(
+      const user = await this.User.updateOne(
         {
           email: req.body.email,
         },
@@ -67,7 +67,7 @@ class userModel {
 
   static upadatePAssword = async (req) => {
     try {
-      const user = await userModel.User.updateOne(
+      const user = await this.User.updateOne(
         {
           _id: req.body._id,
         },

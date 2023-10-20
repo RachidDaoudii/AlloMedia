@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 
 class jwtToken {
   static generateToken = async (user) => {
-    const token = await jwt.sign({user}, process.env.PRIVATEKEY, {
+    const token = await jwt.sign({ user }, process.env.PRIVATEKEY, {
       expiresIn: "10m",
     });
-    
+
     return token;
   };
 
