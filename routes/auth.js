@@ -5,47 +5,34 @@ const jwtToken = require("../helpers/jwtToken");
 const auth = require("../middlewares/auth");
 const validation = require("../middlewares/resRegister");
 
-router.post("/auth/login", authController.login);
+router.post("/login", authController.login);
 
-router.post("/auth/register", validation.resRegister, authController.register);
+router.post("/register", authController.register);
 
-router.post("/auth/forgetpassword", authController.forgetpassword);
+router.get("/forgetpassword", authController.sendEmailforgetpassword);
+router.post(
+  "/forgetpassword/:token",
+  jwtToken.verifyToken,
+  authController.forgetpassword
+);
 
 router.post(
-  "/auth/resetpassword",
+  "/resetpassword",
   auth.isAuth,
-  validation.resetpassword,
+  jwtToken.verifyToken,
   authController.resetpassword
 );
 
 router.get(
-  "/auth/logout",
+  "/logout",
   [auth.isAuth, jwtToken.verifyToken],
   authController.logout
 );
 
 router.get(
-  "/auth/activationEmail/:email/:token",
+  "/activationEmail/:email/:token",
   jwtToken.verifyToken,
   authController.activationEmail
-);
-
-// router.post("/auth/refreash", [jwtToken.RefreshToken]);
-
-router.post(
-  "/user/livreur",
-  [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
-  authController.profilUser
-);
-router.post(
-  "/user/manager",
-  [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
-  authController.profilUser
-);
-router.post(
-  "/user/client",
-  [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
-  authController.profilUser
 );
 
 module.exports = router;

@@ -9,27 +9,40 @@ class auth {
   static login = async (req, res) => {
     try {
       const result = authRequest.validateLogin(req);
-
       if (result.error)
         return res
           .status(400)
           .json({ status: "error", message: result.error.message });
 
       const user = await usermodel.findUserbyEmail(req);
+      if (!user)
+        return res
+          .status(400)
+          .json({ status: "error", message: "email or password is wrong" });
+
       const compare = await this.comparePassword(
         req.body.password,
         user.password
       );
 
-      if (!user || !compare)
+      if (!compare)
         return res
           .status(400)
-          .json({ status: "error", message: "email or password is wrong" });
+          .json({ status: "error", message: "email or password is wrong !!!" });
 
-      const { username, email, verified } = user;
-      const token = await jwtToken.generateToken(user);
+      const { username, email, verified, _id, role } = user;
+      const token = await jwtToken.generateToken({
+        username,
+        email,
+        verified,
+        _id,
+        role: role,
+      });
+
+      // await this.isEmailVerfied(user, res);
       if (!verified) {
-        await mailer.sendEmail(username, email, token);
+        const subject = "Activation Email";
+        await mailer.sendEmail(username, email, token, subject);
         return res.status(400).json({
           status: "success",
           message: "please verify your email",
@@ -38,8 +51,8 @@ class auth {
 
       res.cookie("_cks_ui", token, { httpOnly: true });
       return res.status(201).json({
-        status: "success",
-        message: `Bonjour ${username}`,
+        status: "sucess",
+        message: "login success",
       });
     } catch (error) {
       return res.status(404).json({
@@ -51,21 +64,40 @@ class auth {
 
   static register = async (req, res) => {
     try {
+      const result = authRequest.validateRegister(req);
+
+      if (result.error)
+        return res
+          .status(400)
+          .json({ status: "error", message: result.error.message });
+
       req.body.password = await this.hashPassword(req.body.password);
 
-      const role = await rolemodel.getRole(req);
-      req.body.role = role._id;
+      const _role = await rolemodel.getRole(req);
+      req.body.role = _role._id;
       const user = await usermodel.createUser(req);
+
+      const { username, email, verified, _id, role } = user;
+      const token = await jwtToken.generateToken({
+        username,
+        email,
+        verified,
+        _id,
+        role: role,
+      });
 
       if (user.keyValue)
         return res.status(400).json({
           status: "error",
-          message: "email deja exist",
+          message: "email already exists",
         });
+
+      const subject = "Activation Email";
+      await mailer.sendEmail(username, email, token, subject);
 
       return res.status(201).json({
         status: "success",
-        message: "user created",
+        message: "please verify your email",
       });
     } catch (error) {
       return res.status(404).json({
@@ -77,6 +109,7 @@ class auth {
 
   static activationEmail = async (req, res) => {
     req.body.email = req.params.email;
+    const token = req.params.token;
     try {
       const user = await usermodel.findUserbyEmail(req);
       if (!user)
@@ -98,7 +131,7 @@ class auth {
     }
   };
 
-  static profilUser = async (req, res, next) => {
+  static profile = async (req, res, next) => {
     try {
       const token = req.cookies._cks_ui;
       const user = await jwtToken.decoded(token);
@@ -122,12 +155,47 @@ class auth {
     }
   };
 
-  static forgetpassword = async (req, res) => {
-    return res.send("testing route forgetpassword");
+  static sendEmailforgetpassword = async (req, res) => {
+    const result = authRequest.validateForgetpassword(req);
+
+    if (result.error)
+      return res
+        .status(400)
+        .json({ status: "error", message: result.error.message });
+
+    const user = await usermodel.findUserbyEmail(req);
+    if (!user)
+      return res.status(400).json({
+        status: "error",
+        message: "user not found",
+      });
+    const { username, email, _id, verified } = user;
+
+    const token = await jwtToken.generateToken({
+      username,
+      email,
+      _id,
+      verified,
+    });
+    const subject = "Forget Password";
+
+    await mailer.sendEmail(username, email, token, subject);
+
+    return res.status(201).json({
+      status: "success",
+      message: "please check your email",
+    });
   };
 
   static resetpassword = async (req, res) => {
     try {
+      const result = authRequest.validateResetpassword(req);
+
+      if (result.error)
+        return res
+          .status(400)
+          .json({ status: "error", message: result.error.message });
+
       const gettoken = req.cookies._cks_ui;
       const user = await jwtToken.decoded(gettoken);
       if (!user)
@@ -136,9 +204,18 @@ class auth {
           message: "user not found",
         });
 
-      const { _id, password } = user.user;
+      const { _id, email } = user.user;
       req.body._id = _id;
+      req.body.email = email;
+      const getUser = await usermodel.findUserbyEmail(req);
 
+      if (!getUser)
+        return res.status(400).json({
+          status: "error",
+          message: "user not found",
+        });
+
+      const { password } = getUser;
       const compare = await this.comparePassword(
         req.body.old_password,
         password
@@ -167,6 +244,27 @@ class auth {
     }
   };
 
+  static forgetpassword = async (req, res) => {
+    const token = req.params.token;
+    const user = await jwtToken.decoded(token);
+    if (!user)
+      return res.status(400).json({
+        status: "error",
+        message: "user not found",
+      });
+
+    const { _id } = user.user;
+    const hash = await this.hashPassword(req.body.password);
+    req.body._id = _id;
+    req.body.new_password = hash;
+    await usermodel.upadatePAssword(req);
+
+    return res.status(201).json({
+      status: "success",
+      message: "password updated",
+    });
+  };
+
   static logout = async (req, res) => {
     res.clearCookie("_cks_ui");
     return res.status(200).json({
@@ -184,6 +282,18 @@ class auth {
   static comparePassword = async (password_compare, password) => {
     const compare = await bycrpt.compare(password_compare, password);
     return compare;
+  };
+
+  static isEmailVerfied = async (user, res) => {
+    if (!user.verified) {
+      const subject = "Activation Email";
+      await mailer.sendEmail(user.username, user.email, user.token, subject);
+      return res.status(400).json({
+        status: "success",
+        message: "please verify your email",
+      });
+    }
+    return true;
   };
 }
 

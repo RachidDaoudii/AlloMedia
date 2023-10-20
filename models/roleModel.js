@@ -6,7 +6,7 @@ class roleModel {
     created_at: { type: Date, default: Date.now },
   });
 
-  static Role = mongoose.model("Role", roleModel.roleSchema);
+  static Role = mongoose.model("Role", this.roleSchema);
 
   static createRole = async (req, res) => {
     try {
@@ -23,7 +23,7 @@ class roleModel {
 
   static getRole = async (req, res) => {
     try {
-      const role = await roleModel.Role.findOne({
+      const role = await this.Role.findOne({
         name: req.body.role,
       });
       return role;
