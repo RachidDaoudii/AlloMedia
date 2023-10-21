@@ -11,32 +11,32 @@ class Mailer {
     },
   });
 
-  static template = (name, email, tekon, _subject) => {
+  static template = (name, email, token, _subject) => {
     if (_subject == "Activation Email") {
       return `
         <h1>Hi, ${name}</h1>
         <p>Thank you for registering on our site.</p>
         <p>Click the link below to activate your account</p>
-        <a href="http://localhost:3000/api/auth/activationEmail/${email}/${tekon}">Activate</a>
+        <a href="http://localhost:3000/api/auth/activationEmail/${email}/${token}">Activate</a>
         `;
     } else {
       return `<h1>Bonjour ${name}</h1>
         <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail ou nous contacter pour nous le signaler. Votre compte est en sécurité.</p>
-        <p>Voici votre code de réinitialisation de mot de passe : ${tekon}</p>
+        <p>Voici votre code de réinitialisation de mot de passe : ${token}</p>
         `;
     }
   };
 
-  static sendEmail = async (name, to, tekon, _subject) => {
+  static sendEmail = async (name, to, token, _subject) => {
     try {
       const mailOptions = {
         from: "rachiddaoudi533@gmail.com",
         to: to,
         subject: _subject,
-        html: this.template(name, to, tekon, _subject),
+        html: this.template(name, to, token, _subject),
       };
       const info = await this.transport.sendMail(mailOptions);
-      console.log(`Message sent: ${info.messageId}`);
+      // console.log(`Message sent: ${info.messageId}`);
     } catch (error) {
       return error;
     }
