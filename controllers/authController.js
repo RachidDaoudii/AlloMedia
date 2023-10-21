@@ -180,7 +180,6 @@ class auth {
       verified,
     });
     const subject = "Forget Password";
-
     await mailer.sendEmail(username, email, token, subject);
 
     return res.status(201).json({
@@ -256,7 +255,16 @@ class auth {
         message: "user not found",
       });
 
-    const { _id } = user.user;
+    const { _id, email } = user.user;
+    req.body.email = email;
+    const _user = await usermodel.findUserbyEmail(req);
+
+    if (!_user)
+      return res.status(400).json({
+        status: "error",
+        message: "user not found",
+      });
+
     const hash = await this.hashPassword(req.body.password);
     req.body._id = _id;
     req.body.new_password = hash;
