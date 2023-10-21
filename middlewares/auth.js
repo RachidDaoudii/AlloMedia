@@ -15,7 +15,7 @@ class auth {
     const { user } = await jwtToken.decoded(token);
     switch (user.role.name) {
       case "manager":
-        if (req.url != "/manager/profile") {
+        if (req.url != "/manager/me") {
           return res.status(401).json({
             status: "error",
             message: "you are not authorized",
@@ -24,7 +24,7 @@ class auth {
         next();
         break;
       case "client":
-        if (req.url != "/client/profile") {
+        if (req.url != "/client/me") {
           return res.status(401).json({
             status: "error",
             message: "you are not authorized",
@@ -33,7 +33,7 @@ class auth {
         next();
         break;
       case "livreur":
-        if (req.url != "/livreur/profile") {
+        if (req.url != "/livreur/me") {
           return res.status(401).json({
             status: "error",
             message: "you are not authorized",

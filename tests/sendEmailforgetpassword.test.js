@@ -4,16 +4,6 @@ const userModel = require("../models/userModel");
 const jwtToken = require("../helpers/jwtToken");
 const mailer = require("../helpers/mailer");
 
-jest.mock("../helpers/jwtToken", () => ({
-  ...jest.requireActual("../helpers/jwtToken"),
-  generateToken: jest.fn(),
-}));
-
-jest.mock("../helpers/mailer", () => ({
-  ...jest.requireActual("../helpers/mailer"),
-  sendEmail: jest.fn(),
-}));
-
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
@@ -26,7 +16,7 @@ describe("test parti send email for forget password ", () => {
         email: "",
       },
     };
-
+    
     await auth.sendEmailforgetpassword(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -35,7 +25,7 @@ describe("test parti send email for forget password ", () => {
     });
   });
 
-  it("should status 400 if invalid email format", () => {
+  it("should status 400 if invalid email format", async () => {
     const req = {
       body: {
         email: "daoudi@gmail.c12om",
@@ -57,7 +47,7 @@ describe("test parti send email for forget password ", () => {
       },
     };
 
-    await userModel.findUserbyEmail.mockResolvedValue(null);
+    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce(null);
     await auth.sendEmailforgetpassword(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -72,24 +62,27 @@ describe("test parti send email for forget password ", () => {
         email: "daoudi@gmail.com",
       },
     };
-    await userModel.findUserbyEmail.mockResolvedValue({
+
+    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce({
       _id: "1234",
       email: "daoudi@gmail.com",
       password: "daoudi",
     });
 
-    await jwtToken.generateToken.mockResolvedValue({
+    await jest.spyOn(jwtToken, "generateToken").mockResolvedValueOnce({
       _id: "1234",
       email: "daoudi@gmail.com",
       password: "daoudi",
     });
 
-    await mailer.sendEmail.mockResolvedValue(
-      "username",
-      "daoudi@gmail.com",
-      "tekon",
-      "Activation Email"
-    );
+    await jest
+      .spyOn(mailer, "sendEmail")
+      .mockResolvedValueOnce(
+        "username",
+        "daoudi@gmail.com",
+        "DFG34543",
+        "Activation Email"
+      );
 
     await auth.sendEmailforgetpassword(req, res);
     expect(res.status).toHaveBeenCalledWith(201);

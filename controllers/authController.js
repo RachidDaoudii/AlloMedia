@@ -44,7 +44,7 @@ class auth {
         const subject = "Activation Email";
         await mailer.sendEmail(username, email, token, subject);
         return res.status(400).json({
-          status: "success",
+          status: "error",
           message: "please verify your email",
         });
       }
@@ -76,6 +76,8 @@ class auth {
       const _role = await rolemodel.getRole(req);
       req.body.role = _role._id;
       const user = await usermodel.createUser(req);
+
+      // console.log(user);
 
       const { username, email, verified, _id, role } = user;
       const token = await jwtToken.generateToken({
@@ -196,12 +198,13 @@ class auth {
           .status(400)
           .json({ status: "error", message: result.error.message });
 
-      const gettoken = req.cookies._cks_ui;
+      // const gettoken = req.cookies._cks_ui;
+      const gettoken = req.cookies && req.cookies._cks_ui;
       const user = await jwtToken.decoded(gettoken);
-      if (!user)
+      if (!user || !user.user)
         return res.status(400).json({
           status: "error",
-          message: "user not found",
+          message: "user not found !!!",
         });
 
       const { _id, email } = user.user;

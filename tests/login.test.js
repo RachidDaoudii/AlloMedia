@@ -5,21 +5,6 @@ const mailer = require("../helpers/mailer");
 const bcrypt = require("bcryptjs");
 jest.mock("../models/userModel");
 
-jest.mock("../controllers/authController", () => ({
-  ...jest.requireActual("../controllers/authController"),
-  comparePassword: jest.fn(),
-}));
-
-jest.mock("../helpers/jwtToken", () => ({
-  ...jest.requireActual("../helpers/jwtToken"),
-  generateToken: jest.fn(),
-}));
-
-jest.mock("../helpers/mailer", () => ({
-  ...jest.requireActual("../helpers/mailer"),
-  sendEmail: jest.fn(),
-}));
-
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
@@ -84,8 +69,7 @@ describe("test parti login ", () => {
       },
     };
 
-    // Mock the behavior of findUserbyEmail
-    userModel.findUserbyEmail.mockResolvedValue(null);
+    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValue(null);
 
     await auth.login(req, res);
 
@@ -104,14 +88,12 @@ describe("test parti login ", () => {
       },
     };
 
-    // Mock the behavior of findUserbyEmail
-    userModel.findUserbyEmail.mockResolvedValue({
-      _id: "1234",
+    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce({
       email: "daoudi@gmail.com",
       password: "daoudi",
     });
 
-    await auth.comparePassword.mockResolvedValue(false);
+    await jest.spyOn(bcrypt, "compare").mockResolvedValueOnce(false);
 
     await auth.login(req, res);
 
@@ -122,76 +104,42 @@ describe("test parti login ", () => {
     });
   });
 
-  // it("should return status 400 and a message to verify email", async () => {
-  //   const req = {
-  //     body: {
-  //       email: "daoudi@gmail.com",
-  //       password: "daoudi",
-  //     },
-  //   };
+  it("should return status 400 if not verify email", async () => {
+    const req = {
+      body: {
+        email: "daoudi@gmail.com",
+        password: "daoudi",
+      },
+    };
 
-  //   // Mock the behavior of findUserbyEmail
-  //   userModel.findUserbyEmail.mockResolvedValue({
-  //     _id: "1234",
-  //     email: "daoudi@gmail.com",
-  //     password: "daoudi",
-  //     verified: false, // Simulate an unverified email
-  //   });
+    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce({
+      email: "daoudi@gmail.com",
+      password: "daoudi",
+    });
 
-  //   // Mock the comparePassword function to resolve with true for simplicity
-  //   auth.comparePassword.mockResolvedValue();
+    await jest.spyOn(bcrypt, "compare").mockResolvedValueOnce(true);
 
-  //   // Mock the generateToken function
-  //   jwtToken.generateToken.mockResolvedValue({
-  //     username: "example",
-  //     email: "daoudi@gmail.com",
-  //     verified: false,
-  //     _id: "1234",
-  //     role: "user",
-  //   });
+    await jest.spyOn(jwtToken, "generateToken").mockResolvedValueOnce({
+      _id: "123",
+      username: "test",
+      email: "daoudi@gmail.com",
+      password: "123",
+      role: "123",
+    });
 
-  //   // Mock the mailer function
-  //   mailer.sendEmail.mockResolvedValue(); // Assuming mailer.sendEmail is a function that doesn't return a promise
+    await jest.spyOn(mailer, "sendEmail").mockResolvedValueOnce({
+      username: "daoudi",
+      email: "daoudi@gmail.com",
+      token: "DHD435TGFDGR6546TGFDG",
+      subject: "Activation Email",
+    });
 
-  //   await auth.login(req, res);
+    await auth.login(req, res);
 
-  //   expect(res.status).toHaveBeenCalledWith(400);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     status: "success",
-  //     message: "please verify your email",
-  //   });
-
-  //   // Optionally, you can also check if mailer.sendEmail was called with the correct arguments
-  //   expect(mailer.sendEmail).toHaveBeenCalledWith(
-  //     "example",
-  //     "daoudi@gmail.com",
-  //     expect.any(String),
-  //     "Activation Email"
-  //   );
-  // });
-
-  // it("should return status 400 if not verify email", async () => {
-  //   const req = {
-  //     body: {
-  //       email: "daoudi@gmail.com",
-  //       password: "daoudi",
-  //     },
-  //   };
-
-  //   // Mock the behavior of findUserbyEmail
-  //   userModel.findUserbyEmail.mockResolvedValue({
-  //     email: "daoudi@gmail.com",
-  //     password: "daoudi",
-  //   });
-
-  //   auth.comparePassword.mockReturnValue(true);
-
-  //   await auth.login(req, res);
-
-  //   expect(res.status).toHaveBeenCalledWith(400);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     status: "success",
-  //     message: "please verify your email",
-  //   });
-  // });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      status: "error",
+      message: "please verify your email",
+    });
+  });
 });
