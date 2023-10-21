@@ -5,7 +5,7 @@ const jwtToken = require("../helpers/jwtToken");
 const livreurController = require("../controllers/livreurController");
 
 router.post(
-  "/livreur/profile",
+  "/livreur/me",
   [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
   livreurController.profileLivreur
 );

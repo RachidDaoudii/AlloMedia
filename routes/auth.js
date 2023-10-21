@@ -10,6 +10,7 @@ router.post("/login", authController.login);
 router.post("/register", authController.register);
 
 router.get("/forgetpassword", authController.sendEmailforgetpassword);
+
 router.post(
   "/forgetpassword/:token",
   jwtToken.verifyToken,

@@ -5,7 +5,7 @@ const jwtToken = require("../helpers/jwtToken");
 const managerController = require("../controllers/managerController");
 
 router.post(
-  "/manager/profile",
+  "/manager/me",
   [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
   managerController.profileManager
 );

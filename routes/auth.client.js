@@ -5,7 +5,7 @@ const jwtToken = require("../helpers/jwtToken");
 const clientController = require("../controllers/clientController");
 
 router.post(
-  "/client/profile",
+  "/client/me",
   [auth.isAuth, jwtToken.verifyToken, auth.checkRole],
   clientController.profileClient
 );

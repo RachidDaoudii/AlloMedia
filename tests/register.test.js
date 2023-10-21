@@ -4,18 +4,6 @@ const userRole = require("../models/roleModel");
 const bcrypt = require("bcryptjs");
 const jwtToken = require("../helpers/jwtToken");
 
-jest.mock("../models/userModel");
-jest.mock("../models/roleModel");
-
-jest.mock("../controllers/authController", () => ({
-  ...jest.requireActual("../controllers/authController"),
-  hashPassword: jest.fn(),
-}));
-
-jest.mock("../helpers/jwtToken", () => ({
-  ...jest.requireActual("../helpers/jwtToken"),
-  generateToken: jest.fn(),
-}));
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
@@ -131,6 +119,38 @@ describe("test parti Register ", () => {
     expect(res.json).toHaveBeenCalledWith({
       status: "error",
       message: '"repeat_password" must be [ref:password]',
+    });
+  });
+
+  it("should return status 400 if user already existed", async () => {
+    const req = {
+      body: {
+        username: "test",
+        role: "manager",
+        email: "daoudi@gmail.com",
+        password: "daoudi",
+        repeat_password: "daoudi",
+      },
+    };
+    await jest.spyOn(bcrypt, "hash").mockResolvedValueOnce("hashedPassword");
+    await jest.spyOn(userRole, "getRole").mockResolvedValueOnce({
+      _id: "123",
+      role: "manager",
+    });
+
+    await jest.spyOn(userModel, "createUser").mockResolvedValueOnce({
+      name: "MongoServerError",
+      code: 11000,
+      keyValue: { email: "daoudi@gmail.com" },
+      keyPattern: { email: 1 },
+      message:
+        'E11000 duplicate key error collection: AlloMedia.users index: email_1 dup key: { email: "daoudi@gmail.com" }',
+    });
+    await auth.register(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      status: "error",
+      message: "email already exists",
     });
   });
 
