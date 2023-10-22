@@ -40,7 +40,13 @@ class auth {
       });
 
       // await this.isEmailVerfied(user, res);
-      if (!verified) {
+      if (user && user.verified) {
+        res.cookie("_cks_ui", token, { httpOnly: true });
+        return res.status(201).json({
+          status: "sucess",
+          message: "login success",
+        });
+      } else {
         const subject = "Activation Email";
         await mailer.sendEmail(username, email, token, subject);
         return res.status(400).json({
@@ -48,12 +54,6 @@ class auth {
           message: "please verify your email",
         });
       }
-
-      res.cookie("_cks_ui", token, { httpOnly: true });
-      return res.status(201).json({
-        status: "sucess",
-        message: "login success",
-      });
     } catch (error) {
       return res.status(404).json({
         status: "error",
