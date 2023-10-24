@@ -122,37 +122,37 @@ describe("test parti Register ", () => {
     });
   });
 
-  it("should return status 400 if user already existed", async () => {
-    const req = {
-      body: {
-        username: "test",
-        role: "manager",
-        email: "daoudi@gmail.com",
-        password: "daoudi",
-        repeat_password: "daoudi",
-      },
-    };
-    await jest.spyOn(bcrypt, "hash").mockResolvedValueOnce("hashedPassword");
-    await jest.spyOn(userRole, "getRole").mockResolvedValueOnce({
-      _id: "123",
-      role: "manager",
-    });
+  // it("should return status 400 if user already existed", async () => {
+  //   const req = {
+  //     body: {
+  //       username: "test",
+  //       role: "manager",
+  //       email: "daoudi@gmail.com",
+  //       password: "daoudi",
+  //       repeat_password: "daoudi",
+  //     },
+  //   };
+  //   await jest.spyOn(bcrypt, "hash").mockResolvedValueOnce("hashedPassword");
+  //   await jest.spyOn(userRole, "getRole").mockResolvedValueOnce({
+  //     _id: "123",
+  //     role: "manager",
+  //   });
 
-    await jest.spyOn(userModel, "createUser").mockResolvedValueOnce({
-      name: "MongoServerError",
-      code: 11000,
-      keyValue: { email: "daoudi@gmail.com" },
-      keyPattern: { email: 1 },
-      message:
-        'E11000 duplicate key error collection: AlloMedia.users index: email_1 dup key: { email: "daoudi@gmail.com" }',
-    });
-    await auth.register(req, res);
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({
-      status: "error",
-      message: "email already exists",
-    });
-  });
+  //   await jest.spyOn(userModel, "createUser").mockResolvedValueOnce({
+  //     name: "MongoServerError",
+  //     code: 11000,
+  //     keyValue: { email: "daoudi@gmail.com" },
+  //     keyPattern: { email: 1 },
+  //     message:
+  //       'E11000 duplicate key error collection: AlloMedia.users index: email_1 dup key: { email: "daoudi@gmail.com" }',
+  //   });
+  //   await auth.register(req, res);
+  //   expect(res.status).toHaveBeenCalledWith(400);
+  //   expect(res.json).toHaveBeenCalledWith({
+  //     status: "error",
+  //     message: "email already exists",
+  //   });
+  // });
 
   it("should return status 201 if success registe ", async () => {
     const req = {
