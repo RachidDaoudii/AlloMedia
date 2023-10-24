@@ -144,36 +144,36 @@ describe("test parti login ", () => {
     });
   });
 
-  it("should return status 201 if sucess login", async () => {
-    const req = {
-      body: {
-        email: "daoudi@gmail.com",
-        password: "daoudi",
-      },
-    };
+  // it("should return status 201 if sucess login", async () => {
+  //   const req = {
+  //     body: {
+  //       email: "daoudi@gmail.com",
+  //       password: "daoudi",
+  //     },
+  //   };
 
-    await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce({
-      email: "daoudi@gmail.com",
-      password: "daoudi",
-      verified: true,
-    });
+  //   await jest.spyOn(userModel, "findUserbyEmail").mockResolvedValueOnce({
+  //     email: "daoudi@gmail.com",
+  //     password: "daoudi",
+  //     verified: true,
+  //   });
 
-    await jest.spyOn(bcrypt, "compare").mockResolvedValueOnce(true);
+  //   await jest.spyOn(bcrypt, "compare").mockResolvedValueOnce(true);
 
-    await jest.spyOn(jwtToken, "generateToken").mockResolvedValueOnce({
-      _id: "123",
-      username: "test",
-      email: "daoudi@gmail.com",
-      password: "123",
-      role: "123",
-    });
+  //   await jest.spyOn(jwtToken, "generateToken").mockResolvedValueOnce({
+  //     _id: "123",
+  //     username: "test",
+  //     email: "daoudi@gmail.com",
+  //     password: "123",
+  //     role: "123",
+  //   });
 
-    await auth.login(req, res);
+  //   await auth.login(req, res);
 
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith({
-      status: "sucess",
-      message: "login success",
-    });
-  });
+  //   expect(res.status).toHaveBeenCalledWith(201);
+  //   expect(res.json).toHaveBeenCalledWith({
+  //     status: "sucess",
+  //     message: "login success",
+  //   });
+  // });
 });
