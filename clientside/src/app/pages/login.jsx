@@ -57,7 +57,9 @@ export default function Login() {
   React.useEffect(() => {
     if (isLoginSuccess) {
       dispatch(setlogin(loginData));
-      if (loginData.data.verified) return navigate("/dashboard");
+      if (loginData.data.verified && loginData.data.role.name == "manager") {
+        return navigate("/dashboard");
+      }
     }
   }, [isLoginSuccess]);
 

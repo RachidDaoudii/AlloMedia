@@ -23,6 +23,13 @@ export const authApi = ApiSlice.injectEndpoints({
         body,
       }),
     }),
+    RestPassword: builder.mutation({
+      query: (body) => ({
+        url: `auth/forgetpassworduser`,
+        method: "POST",
+        body,
+      }),
+    }),
     getMe: builder.mutation({
       query: () => ({
         url: "user/me",
@@ -44,4 +51,5 @@ export const {
   useGetMeMutation,
   useLogoutMutation,
   useSendEmailForGetPAssworMutation,
+  useRestPasswordMutation,
 } = authApi;

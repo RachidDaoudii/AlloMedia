@@ -255,7 +255,7 @@ class auth {
   };
 
   static forgetpassword = async (req, res) => {
-    const token = req.params.token;
+    const token = req.body.token;
     const user = await jwtToken.decoded(token);
     if (!user)
       return res.status(400).json({
