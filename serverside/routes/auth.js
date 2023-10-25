@@ -11,7 +11,7 @@ router.post("/register", authController.register);
 router.post("/forgetpassword", authController.sendEmailforgetpassword);
 
 router.post(
-  "/forgetpassword/:token",
+  "/forgetpassworduser",
   jwtToken.verifyToken,
   authController.forgetpassword
 );

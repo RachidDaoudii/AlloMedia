@@ -7,6 +7,4 @@ export const BaseQuery = fetchBaseQuery({
 export const ApiSlice = createApi({
   baseQuery: BaseQuery,
   endpoints: (builder) => ({}),
-
-  
 });

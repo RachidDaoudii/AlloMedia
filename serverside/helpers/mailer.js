@@ -22,7 +22,9 @@ class Mailer {
     } else {
       return `<h1>Bonjour ${name}</h1>
         <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail ou nous contacter pour nous le signaler. Votre compte est en sécurité.</p>
-        <p>Voici votre code de réinitialisation de mot de passe : ${token}</p>
+        
+        <a href="http://localhost:5173/restPassword/?token=${token}">Reset Password</a>
+
         `;
     }
   };

@@ -11,7 +11,7 @@ class jwtToken {
 
   static verifyToken = async (req, res, next) => {
     try {
-      const token = req.params.token || req.cookies._cks_ui;
+      const token = req.params.token || req.cookies._cks_ui || req.body.token;
       if (!token)
         return res.status(401).json({
           status: "error",
