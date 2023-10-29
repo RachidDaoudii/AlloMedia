@@ -34,6 +34,19 @@ class roleModel {
       });
     }
   };
+
+  static getAll = async (req, res) => {
+    try {
+      const roles = await this.Role.find();
+      const filteredRoles = roles.filter((role) => role.name !== "manager");
+      return filteredRoles;
+    } catch (error) {
+      return res.status(400).json({
+        status: "error",
+        message: "roles not found",
+      });
+    }
+  };
 }
 
 module.exports = roleModel;

@@ -9,6 +9,19 @@ class userModel {
       required: true,
       unique: true,
     },
+    phone: {
+      type: String,
+      unique: true,
+      default: null,
+    },
+    adress: {
+      type: String,
+      default: null,
+    },
+    city: {
+      type: String,
+      default: null,
+    },
     role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
@@ -25,7 +38,7 @@ class userModel {
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        role: req.body.role,
+        role: req.body._role,
       });
 
       await user.save();

@@ -23,7 +23,7 @@ router.post(
   authController.resetpassword
 );
 
-router.get(
+router.post(
   "/logout",
   [auth.isAuth, jwtToken.verifyToken],
   authController.logout

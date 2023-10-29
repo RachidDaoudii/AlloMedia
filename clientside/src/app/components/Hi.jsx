@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Typography from "@mui/material/Typography";
-import NavBar from "./../components/NavBar";
-function Dashboard() {
-  const { auth } = useSelector((state) => state);
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
+function Hi() {
+  const auth = useSelector((state) => state.auth);
+  toast.success(`Bonjour ${auth.username}, votre rôle est : ${auth.role.name}`);
 
   return (
     <div>
-      <NavBar />
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
         Bonjour {auth.username}, votre rôle est : {auth.role.name}
       </Typography>
@@ -15,4 +17,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Hi;

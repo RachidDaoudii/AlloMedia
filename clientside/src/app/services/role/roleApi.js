@@ -1,8 +1,8 @@
-import { ApiSlice } from "../api/apiSlice";
+import { ApiSlice } from "../../api/apiSlice";
 
-export const authApi = ApiSlice.injectEndpoints({
+export const roleApi = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.query({
+    getRoles: builder.mutation({
       query: () => ({
         url: "auth/roles",
         method: "get",
@@ -10,3 +10,5 @@ export const authApi = ApiSlice.injectEndpoints({
     }),
   }),
 });
+
+export const { useGetRolesMutation } = roleApi;
