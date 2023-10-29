@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 class jwtToken {
   static generateToken = async (user) => {
     const token = await jwt.sign({ user }, process.env.PRIVATEKEY, {
-      expiresIn: "10m",
+      expiresIn: "48h",
     });
 
     return token;
@@ -11,7 +11,10 @@ class jwtToken {
 
   static verifyToken = async (req, res, next) => {
     try {
-      const token = req.params.token || req.cookies._cks_ui || req.body.token;
+      const token =
+        req.params.token ||
+        req.cookies._cks_ui ||
+        req.body.token 
       if (!token)
         return res.status(401).json({
           status: "error",

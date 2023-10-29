@@ -7,7 +7,6 @@ const AuthState = {
   role: {},
   isAuth: false,
   verified: null,
-  token: null,
 };
 
 const authSlice = createSlice({
@@ -18,17 +17,33 @@ const authSlice = createSlice({
       state._id = action.payload.data._id;
       state.username = action.payload.data.username;
       state.email = action.payload.data.email;
+      state.phone = action.payload.data.phone;
+      state.adress = action.payload.data.adress;
+      state.city = action.payload.data.city;
       state.role = action.payload.data.role;
       state.verified = action.payload.data.verified;
       state.isAuth = true;
-      state.token = action.payload.data.token;
 
-      Cookies.set("_cks_ui", action.payload.data.token);
+      localStorage.setItem(
+        "USER",
+        JSON.stringify({
+          data: {
+            _id: action.payload.data._id,
+            username: action.payload.data.username,
+            email: action.payload.data.email,
+            role: action.payload.data.role,
+            verified: action.payload.data.verified,
+            isAuth: true,
+          },
+        })
+      );
+
     },
     logout: (state) => {
       state.user = null;
       state.isAuth = false;
       Cookies.remove("_cks_ui");
+      localStorage.removeItem("USER");
       state.token = null;
     },
     register: (state, action) => {

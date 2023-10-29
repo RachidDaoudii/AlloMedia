@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useSendEmailForGetPAssworMutation } from "../services/authApi";
+import { useSendEmailForGetPAssworMutation } from "../services/auth/authApi";
 
 export default function ForGetPassword() {
   const initialState = {

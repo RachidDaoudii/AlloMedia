@@ -30,7 +30,8 @@ class auth {
           .status(400)
           .json({ status: "error", message: "email or password is wrong !!!" });
 
-      const { username, email, verified, _id, role } = user;
+      const { username, email, phone, adress, city, verified, _id, role } =
+        user;
       const token = await jwtToken.generateToken({
         username,
         email,
@@ -39,19 +40,23 @@ class auth {
         role: role,
       });
 
-      // await this.isEmailVerfied(user, res);
+      // await this.isEmailVerfied(user, res); {  secure: true }
       if (user && user.verified) {
-        res.cookie("_cks_ui", token, { httpOnly: true });
+        res.cookie("_cks_ui", token, {
+          secure: true,
+        });
         return res.status(201).json({
           status: "sucess",
           message: "login success",
           data: {
             username,
             email,
+            phone,
+            adress,
+            city,
             verified,
             _id,
-            role: role,
-            token: token,
+            role: role
           },
         });
       } else {
@@ -81,8 +86,8 @@ class auth {
 
       req.body.password = await this.hashPassword(req.body.password);
 
-      const _role = await rolemodel.getRole(req);
-      req.body.role = _role._id;
+      // const _role = await rolemodel.getRole(req);
+      // req.body.role = _role._id;
       const user = await usermodel.createUser(req);
 
       // console.log(user);
@@ -129,10 +134,11 @@ class auth {
         });
 
       await usermodel.updateUser(req);
-      return res.status(201).json({
-        status: "success",
-        message: "Verification successful",
-      });
+      return res.status(201).redirect("http://localhost:5173/login");
+      // return res.status(201).json({
+      //   status: "success",
+      //   message: "Verification successful",
+      // });
     } catch (error) {
       return res.status(404).json({
         status: "error",
