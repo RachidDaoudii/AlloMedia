@@ -18,9 +18,10 @@ jobs:
         with:
           node-version: "14"
 
-        working-directory: serverside
+         working-directory: serverside
       - name: Install dependencies
         run: npm install
+        
 
       - name: Run tests
         run: npm test
