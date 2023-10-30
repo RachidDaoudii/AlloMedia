@@ -6,13 +6,18 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useRestPasswordMutation } from "../services/auth/authApi";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function RestPassword() {
+  const navigate = useNavigate();
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const token = query.get("token");
+
+  if (!token) {
+    return navigate("/login");
+  }
 
   const initialState = {
     password: "",
