@@ -1,6 +1,6 @@
 # AlloMedia
 
-Application de Livraison AlloMedia
+Bienvenue dans le projet de développement d'une application Fullstack JavaScript dédiée à la livraison à domicile pour le restaurant Marhaba. Cette application permettra aux clients de passer des commandes directement depuis l'application et de payer en ligne avant la livraison à domicile.
 
 ## Installation
 
