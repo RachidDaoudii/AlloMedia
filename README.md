@@ -57,6 +57,7 @@ To install and run this project, follow these steps:
 ## API Documentation
 
 - Swagger
+- Open your web browser and navigate to `http://localhost:5000/api-docs/` to view the application
 
 ## Testing
 
