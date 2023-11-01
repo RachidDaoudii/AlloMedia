@@ -27,6 +27,7 @@ const MainRoute = () => {
   }, []);
 
   const auth = useSelector((state) => state.auth);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

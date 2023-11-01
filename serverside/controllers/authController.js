@@ -56,7 +56,7 @@ class auth {
             city,
             verified,
             _id,
-            role: role
+            role: role,
           },
         });
       } else {
@@ -89,8 +89,6 @@ class auth {
       // const _role = await rolemodel.getRole(req);
       // req.body.role = _role._id;
       const user = await usermodel.createUser(req);
-
-      // console.log(user);
 
       const { username, email, verified, _id, role } = user;
       const token = await jwtToken.generateToken({

@@ -9,7 +9,10 @@ const routerLivreur = require("./routes/auth.livreur");
 const routerRole = require("./routes/auth.role");
 const cors = require("cors");
 const app = express();
-const port = process.env.port || 5000;
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./helpers/swagger");
+
+const port = 5000;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -29,6 +32,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/api/auth", routerAuth);
 app.use("/api/user", routerClient);

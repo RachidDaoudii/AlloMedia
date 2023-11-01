@@ -20,15 +20,19 @@ import {
   MDBTabsPane,
   MDBRadio,
 } from "mdb-react-ui-kit";
+import { useForm } from "react-hook-form";
 
 export default function Register() {
   const [loginRegisterActive] = React.useState("register");
+
+  const {
+    handleSubmit,
+    watch,
+    register,
+    formState: { errors },
+  } = useForm();
   const initialState = {
-    username: "",
-    email: "",
     _role: "",
-    password: "",
-    repeat_password: "",
   };
 
   const dispatch = useDispatch();
@@ -62,7 +66,7 @@ export default function Register() {
   ] = useRegisterMutation();
 
   const [formValue, setForm] = useState(initialState);
-  const { username, email, _role, password, repeat_password } = formValue;
+  const { _role } = formValue;
 
   const handleChange = (event) => {
     setForm({
@@ -70,11 +74,19 @@ export default function Register() {
       [event.target.name]: event.target.value,
     });
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (username && email && _role && password && repeat_password) {
-      if (password === repeat_password) {
-        registerUser(formValue);
+  const onSubmit = (data) => {
+    data._role = _role;
+
+    console.log(data);
+    if (
+      data.username &&
+      data.email &&
+      data._role &&
+      data.password &&
+      data.repeat_password
+    ) {
+      if (data.password === data.repeat_password) {
+        registerUser(data);
       } else {
         toast.error("Password and Repeat Password should be same");
       }
@@ -85,7 +97,6 @@ export default function Register() {
 
   React.useEffect(() => {
     if (isRegisterSuccess) {
-      console.log(123123);
       toast.success("Register successfully please verify your email");
       navigate("/login");
     }
@@ -114,7 +125,7 @@ export default function Register() {
 
       <MDBTabsContent>
         <MDBTabsPane show={loginRegisterActive === "register"}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="text-center mb-3">
               <p>Sign up with:</p>
 
@@ -137,24 +148,43 @@ export default function Register() {
 
             <p className="text-center">or:</p>
 
-            <MDBInput className="mb-4" id="form8Example1" label="Name" />
             <MDBInput
               className="mb-4"
               id="form8Example2"
               label="Username"
               name="username"
-              value={username}
-              onChange={handleChange}
+              // value={username}
+              // onChange={handleChange}
+              {...register("username", {
+                required: true,
+              })}
             />
+            {errors.username && (
+              <p className="text-danger">Username is required</p>
+            )}
             <MDBInput
               className="mb-4"
               type="email"
               id="form8Example3"
               label="Email address"
               name="email"
-              value={email}
-              onChange={handleChange}
+              // value={email}
+              {...register("email", {
+                required: true,
+              })}
             />
+            {errors.email && <p className="text-danger">Email is required</p>}
+            <MDBInput
+              className="mb-4"
+              type="number"
+              id="form8Example3"
+              label="Phone"
+              name="phone"
+              {...register("phone", {
+                required: true,
+              })}
+            />
+            {errors.phone && <p className="text-danger">Phone is required</p>}
             <div
               style={{
                 display: "flex",
@@ -171,7 +201,9 @@ export default function Register() {
                       label={data.name}
                       value={data._id}
                       name="_role"
-                      inputProps={{ "aria-label": data.name }}
+                      {...watch("_role", {
+                        required: true,
+                      })}
                     />
                   </div>
                 );
@@ -184,18 +216,26 @@ export default function Register() {
               id="form8Example4"
               label="Password"
               name="password"
-              value={password}
-              onChange={handleChange}
+              {...register("password", {
+                required: true,
+              })}
             />
+            {errors.password && (
+              <p className="text-danger">Password is required</p>
+            )}
             <MDBInput
               className="mb-4"
               type="password"
               id="form8Example5"
               label="Repeat password"
               name="repeat_password"
-              value={repeat_password}
-              onChange={handleChange}
+              {...register("repeat_password", {
+                required: true,
+              })}
             />
+            {errors.repeat_password && (
+              <p className="text-danger">Repeat Password is required</p>
+            )}
 
             <MDBCheckbox
               wrapperClass="d-flex justify-content-center mb-4"

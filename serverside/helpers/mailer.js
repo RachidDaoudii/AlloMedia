@@ -17,7 +17,7 @@ class Mailer {
         <h1>Hi, ${name}</h1>
         <p>Thank you for registering on our site.</p>
         <p>Click the link below to activate your account</p>
-        <a href="http://localhost:3000/api/auth/activationEmail/${email}/${token}">Activate</a>
+        <a href="http://localhost:5000/api/auth/activationEmail/${email}/${token}">Activate</a>
         `;
     } else {
       return `<h1>Bonjour ${name}</h1>

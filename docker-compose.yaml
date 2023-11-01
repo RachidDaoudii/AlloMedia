@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  serverside:
+    build: ./serverside
+    container_name: serverside_c_latest
+    ports:
+      - "5000:5000"
+  clientside:
+    build: ./clientside
+    container_name: clientside_c_latest
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true

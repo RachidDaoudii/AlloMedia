@@ -1,29 +1,24 @@
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import { useRestPasswordMutation } from "../services/auth/authApi";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { useForm } from "react-hook-form";
+import { MDBInput, MDBTabsContent } from "mdb-react-ui-kit";
 export default function RestPassword() {
   const navigate = useNavigate();
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const token = query.get("token");
 
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
   if (!token) {
     return navigate("/login");
   }
-
-  const initialState = {
-    password: "",
-    repeat_password: "",
-    token: token,
-  };
 
   const [
     restPassword,
@@ -35,20 +30,15 @@ export default function RestPassword() {
     },
   ] = useRestPasswordMutation();
 
-  const [formValue, setForm] = useState(initialState);
-  const { password, repeat_password } = formValue;
+  const onSubmit = (data) => {
+    data.token = token;
 
-  const handleChange = (event) => {
-    setForm({
-      ...formValue,
-      [event.target.name]: event.target.value,
-    });
-  };
+    if (data.password != data.repeat_password) {
+      return toast.error("Password and repeat_password must be the same");
+    }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (password && repeat_password) {
-      restPassword(formValue);
+    if (data.password && data.repeat_password) {
+      restPassword(data);
     } else {
       toast.error("Please enter Password and repeat_password");
     }
@@ -57,62 +47,59 @@ export default function RestPassword() {
   useEffect(() => {
     if (isRestPasswordSuccess) {
       toast.success("Password Rest Successfully");
+      navigate("/login");
     }
     if (isRestPasswordError) {
       toast.error(restPasswordError.data.message);
     }
   }, [isRestPasswordSuccess, isRestPasswordError]);
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Rest Password
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="password"
-            name="password"
-            type="password"
-            autoComplete="password"
-            autoFocus
-            onChange={handleChange}
-            value={password}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="repeat_password"
-            label="repeat_password"
-            type="password"
-            id="repeat_password"
-            autoComplete="repeat_password"
-            onChange={handleChange}
-            value={repeat_password}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleSubmit}
-          >
-            Rest Password
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+    <MDBTabsContent>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        <div className="text-center mb-3">
+          <p>Rest Password</p>
+        </div>
+
+        <MDBInput
+          className="mb-4"
+          type="password"
+          id="form7Example1"
+          label="password"
+          name="password"
+          style={{ width: 300 }}
+          {...register("password", {
+            required: true,
+            minLength: {
+              value: 8,
+              message: "Password must have at least 8 characters",
+            },
+          })}
+        />
+        {errors.password && (
+          <span class="text-danger">{errors.password.message}</span>
+        )}
+        <MDBInput
+          className="mb-4"
+          type="password"
+          id="form7Example2"
+          label="repeat_password"
+          name="repeat_password"
+          {...register("repeat_password", {
+            required: true,
+            minLength: {
+              value: 8,
+              message: "Password must have at least 8 characters",
+            },
+          })}
+        />
+        {errors.repeat_password && (
+          <span class="text-danger">{errors.repeat_password.message}</span>
+        )}
+
+        <button type="submit" class="btn btn-primary btn-block mb-3">
+          Rest
+        </button>
+      </form>
+    </MDBTabsContent>
   );
 }

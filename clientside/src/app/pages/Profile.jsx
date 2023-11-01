@@ -1,5 +1,5 @@
-import { MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import { useEffect, useState } from "react";
+import { MDBInput } from "mdb-react-ui-kit";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 function Profile() {
