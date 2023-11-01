@@ -61,9 +61,6 @@ To install and run this project, follow these steps:
 ## Testing
 
 - Jest
-
-# run the test
-
 - Navigate to the project directory using the command `cd serverside`
 - Start the server using the command `npm run test`
 
