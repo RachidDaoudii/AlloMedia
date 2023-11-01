@@ -11,8 +11,7 @@ class userModel {
     },
     phone: {
       type: String,
-      unique: true,
-      default: null,
+      default: "",
     },
     adress: {
       type: String,
@@ -39,6 +38,9 @@ class userModel {
         email: req.body.email,
         password: req.body.password,
         role: req.body._role,
+        phone: req.body.phone,
+        adress: "",
+        city: "",
       });
 
       await user.save();

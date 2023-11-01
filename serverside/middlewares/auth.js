@@ -2,9 +2,7 @@ const jwtToken = require("../helpers/jwtToken");
 
 class auth {
   static isAuth = (req, res, next) => {
-    const token = req.headers.authorization
-      ? req.headers.authorization.split(" ")[1]
-      : null;
+    const token = req.cookies._cks_ui;
     if (!token)
       return res.status(401).json({
         status: "error",

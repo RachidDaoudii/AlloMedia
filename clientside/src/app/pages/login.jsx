@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { setlogin } from "../features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../services/auth/authApi";
@@ -22,9 +21,10 @@ import {
 import { useForm } from "react-hook-form";
 
 export default function login() {
-  const [loginRegisterActive] = React.useState("login");
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [loginRegisterActive] = React.useState("login");
 
   const [
     loginUser,
@@ -43,10 +43,7 @@ export default function login() {
     formState: { errors },
   } = useForm();
 
-  const navigate = useNavigate();
-
   const onSubmit = (data) => {
-    console.log(data);
     if (data.email && data.password) {
       loginUser(data);
     } else {
@@ -131,8 +128,6 @@ export default function login() {
               name="email"
               {...register("email", {
                 required: true,
-                maxLength: 20,
-                minLength: 15,
               })}
             />
             {errors.email && (
@@ -146,8 +141,8 @@ export default function login() {
               name="password"
               {...register("password", {
                 required: true,
-                maxLength: 20,
-                minLength: 6,
+                // maxLength: 20,
+                // minLength: 8,
               })}
             />
             {errors.password && (
