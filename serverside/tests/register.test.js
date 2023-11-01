@@ -18,7 +18,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "",
-        role: "client",
+        _role: "client",
         email: "test@gmail.com",
         password: "test123",
         repeat_password: "test123",
@@ -36,7 +36,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "client",
+        _role: "client",
         email: "",
         password: "test123",
         repeat_password: "test123",
@@ -54,7 +54,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "client",
+        _role: "client",
         email: "test@gmail.comss",
         password: "test123",
         repeat_password: "test123",
@@ -72,7 +72,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "dev",
+        _role: "dev",
         email: "test@gmail.com",
         password: "test123",
         repeat_password: "test123",
@@ -82,7 +82,7 @@ describe("test parti Register ", () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       status: "error",
-      message: "role must be one of [client, manager, livreur]",
+      message: '"_role" must be one of [client, livreur]',
     });
   });
 
@@ -90,7 +90,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "manager",
+        _role: "client",
         email: "test@gmail.com",
         password: "",
         repeat_password: "",
@@ -108,7 +108,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "manager",
+        _role: "client",
         email: "test@gmail.com",
         password: "test",
         repeat_password: "jjjj",
@@ -126,7 +126,7 @@ describe("test parti Register ", () => {
   //   const req = {
   //     body: {
   //       username: "test",
-  //       role: "manager",
+  //       _role: "manager",
   //       email: "daoudi@gmail.com",
   //       password: "daoudi",
   //       repeat_password: "daoudi",
@@ -158,7 +158,7 @@ describe("test parti Register ", () => {
     const req = {
       body: {
         username: "test",
-        role: "manager",
+        _role: "client",
         email: "daoudi@gmail.com",
         password: "daoudi",
         repeat_password: "daoudi",
