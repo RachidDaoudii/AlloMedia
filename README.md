@@ -17,9 +17,9 @@ To install and run this project, follow these steps:
 9. Start the server using the command `npm run dev`
 10. Open your web browser and navigate to `http://localhost:5173` to view the application
 
-## Technologies
+# Technologies
 
-# BackEnd
+## BackEnd
 
 - Express.js
 - MongoDB
@@ -36,7 +36,7 @@ To install and run this project, follow these steps:
 - swagger-jsdoc
 - swagger-ui-express
 
-# FrontEnd
+## FrontEnd
 
 - React.js
 - ReduxToolikit
