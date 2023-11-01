@@ -3,7 +3,9 @@ const Joi = require("joi");
 class authRequest {
   static registerSchema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
-    _role: Joi.string().required(),
+    _role: Joi.string()
+      .valid("client", "livreur")
+    .required(),
     email: Joi.string()
       .email({
         minDomainSegments: 2,
