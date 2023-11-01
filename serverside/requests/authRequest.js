@@ -4,8 +4,8 @@ class authRequest {
   static registerSchema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
     _role: Joi.string()
-      .valid("client", "livreur")
-    .required(),
+      .required()
+      .error(new Error('"_role" must be one of [client, livreur]')),
     email: Joi.string()
       .email({
         minDomainSegments: 2,
