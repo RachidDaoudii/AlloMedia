@@ -4,18 +4,18 @@ Bienvenue dans le projet de développement d'une application Fullstack JavaScrip
 
 ## Installation
 
-To install and run this project, follow these steps:
+Pour installer et exécuter ce projet, procédez comme suit :
 
-1. Clone the repository to your local machine using the command `https://github.com/RachidDaoudii/AlloMedia.git`
-2. Navigate to the project directory using the command `cd serverside`
-3. Install the required dependencies using the command `npm install`
-4. configure your database info in the env file
-5. Start the server using the command `npm run dev`
-6. Open your web browser and navigate to `http://localhost:5000` to view the application
-7. Navigate to the project directory using the command `cd clientserve`
-8. Install the required dependencies using the command `npm install`
-9. Start the server using the command `npm run dev`
-10. Open your web browser and navigate to `http://localhost:5173` to view the application
+1. Clonez le référentiel sur votre machine locale à l'aide de la commande `https://github.com/RachidDaoudii/AlloMedia.git`
+2. Accédez au répertoire du projet à l'aide de la commande `cd serverside`
+3. Installez les dépendances requises à l'aide de la commande `npm install`
+4. configurez les informations de votre base de données dans le fichier env
+5. Démarrez le serveur à l'aide de la commande `npm run dev`
+6. Ouvrez votre navigateur Web et accédez à « http://localhost:5000 » pour afficher l'application.
+7. Accédez au répertoire du projet à l'aide de la commande `cd clientserve`
+8. Installez les dépendances requises à l'aide de la commande `npm install`
+9. Démarrez le serveur à l'aide de la commande `npm run dev`
+10. Ouvrez votre navigateur Web et accédez à `http://localhost:5173` pour afficher l'application.
 
 # Technologies
 
@@ -57,13 +57,13 @@ To install and run this project, follow these steps:
 ## API Documentation
 
 - Swagger
-- Open your web browser and navigate to `http://localhost:5000/api-docs/` to view the application
+- Ouvrez votre navigateur Web et accédez à `http://localhost:5000/api-docs` pour afficher l'application.
 
 ## Testing
 
 - Jest
-- Navigate to the project directory using the command `cd serverside`
-- Start the server using the command `npm run test`
+- Accédez au répertoire du projet à l'aide de la commande `cd serverside`
+- - Démarrez le serveur à l'aide de la commande `npm run test`
 
 ## Pages
 
